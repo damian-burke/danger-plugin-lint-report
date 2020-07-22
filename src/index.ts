@@ -45,17 +45,19 @@ export async function scanXmlReport(git, xmlReport, root, requireLineModificatio
 }
 
 function sendViolationBySeverity(msg: MarkdownString, fileName: string, line: number, severity: string) {
-  switch (severity) {
-    case "Information":
+  switch (severity.toLowerCase()) {
+    case "information":
+    case "info":
       message(msg, fileName, line)
       break
-    case "Warning":
+    case "warning":
+    case "warn":
       warn(msg, fileName, line)
       break
-    case "Error":
+    case "error":
       fail(msg, fileName, line)
       break
-    case "Fatal":
+    case "fatal":
       fail(msg, fileName, line)
       break
   }
