@@ -15,8 +15,10 @@ export function parseCheckstyle(report: any, root: string): Violation[] {
         case "8.0":
         case "4.3":
           return parseCheckstyle8_0(report, root)
-        default:
-          throw new Error(`Checkstyle version ${rootVersion} is not supported.`)
+        default: {
+          console.warn(`Compatibility with version ${rootVersion} not tested`)
+          return parseCheckstyle8_0(report, root)
+        }
       }
     case "issues":
       const rootFormat = report.elements[0].attributes.format
