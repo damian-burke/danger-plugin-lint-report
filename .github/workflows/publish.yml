@@ -1,0 +1,21 @@
+name: Publish
+on:
+  release:
+    types: [published]
+jobs:
+  yarn:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12
+          registry-url: 'https://registry.npmjs.org'
+          
+      - name: Set version
+        run: yarn version --new-version "${{ github.event.release.tag_name }}" --no-git-tag-version
+
+      - name: Publish
+        run: yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
