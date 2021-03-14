@@ -37,6 +37,7 @@ jobs:
           tag_name: ${{ steps.changelog.outputs.tag }}
           release_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.tag }}
+          fallback-version: '1.0.0'
 
       - name: Update package
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
