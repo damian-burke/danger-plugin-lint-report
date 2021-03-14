@@ -14,4 +14,10 @@ interface CheckstyleConfig {
    * If set to false, all issues that are in modified files will be reported.
    */
   requireLineModification: boolean
+
+  /**
+   * Optional: Sets a prefix foreach violation message.
+   * This can be useful if there are multiple reports being parsed to make them distinguishable.
+   */
+  outputPrefix?: string
 }
