@@ -67,11 +67,19 @@ interface CheckstyleConfig {
    * If set to false, all issues that are in modified files will be reported.
    */
   requireLineModification: boolean
+
+  /**
+   * Optional: Sets a prefix foreach violation message.
+   * This can be useful if there are multiple reports being parsed to make them distinguishable.
+   */
+  outputPrefix?: string
 }
 ```
 ## Changelog
 
 See the GitHub [release history](https://github.com/damian-burke/danger-plugin-lint-report/releases).
+
+For the last couple of changelogs, see the [CHANGELOG.md](https://github.com/damian-burke/danger-plugin-lint-report/blob/main/CHANGELOG.md).
 
 ## Contributing
 
