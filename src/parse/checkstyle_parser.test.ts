@@ -122,21 +122,29 @@ describe("parseCheckstyle()", () => {
     expect(violations).toHaveLength(4)
   })
 
-  it("throws up for unknown checkstyle version", () => {
+  it("log warn for untested checkstyle version", () => {
     const root = "/root/"
+    const untestedVersion = "7.0"
     const checkstyle = {
       declaration: { attributes: { version: "1.0", encoding: "utf-8" } },
       elements: [
         {
           type: "element",
           name: "checkstyle",
-          attributes: { version: "7.0" },
+          attributes: { version: untestedVersion },
           elements: [],
         },
       ],
     }
+    const spiedConsole = jest.spyOn(global.console, "warn")
 
-    expect(() => parseCheckstyle(checkstyle, root)).toThrow()
+    parseCheckstyle(checkstyle, root)
+
+    expect(spiedConsole).toBeCalled()
+    const warnLog = spiedConsole.mock.calls[0][0]
+    expect(warnLog).toContain(untestedVersion)
+
+    spiedConsole.mockRestore()
   })
 
   it("parses checkstyle 8.0 without any violations", () => {
