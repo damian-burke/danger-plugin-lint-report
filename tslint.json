@@ -3,6 +3,7 @@
     "tslint:recommended"
   ],
   "rules": {
+    "no-console": false,
     "arrow-parens": false,
     "interface-name": [
       true,
