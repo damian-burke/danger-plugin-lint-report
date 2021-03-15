@@ -1,4 +1,9 @@
-# [1.1.0](https://github.com/damian-burke/danger-plugin-lint-report/compare/1.0.0...1.1.0) (2021-03-14)
+# [1.2.0](https://github.com/damian-burke/danger-plugin-lint-report/compare/1.0.0...1.2.0) (2021-03-15)
+
+
+### Bug Fixes
+
+* test for the unknown checkstyle version ([48a9290](https://github.com/damian-burke/danger-plugin-lint-report/commit/48a92906cb1a828d42b5726266eebe6655f859e1))
 
 
 ### Features
