@@ -16,7 +16,7 @@ export function parseCheckstyle(report: any, root: string): Violation[] {
         case "4.3":
           return parseCheckstyle8_0(report, root)
         default: {
-          console.warn(`Compatibility with version ${rootVersion} not tested`)
+          console.warn(`Compatibility with version ${rootVersion} not tested.`)
           return parseCheckstyle8_0(report, root)
         }
       }
@@ -26,7 +26,8 @@ export function parseCheckstyle(report: any, root: string): Violation[] {
         case "5":
           return parseAndroidLint(report, root)
         default:
-          throw new Error(`Lint report format ${rootFormat} is not supported.`)
+          console.warn(`Compatibility with version ${rootFormat} not tested.`)
+          return parseAndroidLint(report, root)
       }
   }
 
@@ -41,7 +42,7 @@ function parseAndroidLint(report: any, root: string): Violation[] {
   }
 
   report.elements[0].elements.forEach(issueElement => {
-    if (issueElement.name != "issue") {
+    if (issueElement.name !== "issue") {
       console.log(`Illegal element: ${issueElement.name}, expected issue. Ignoring.`)
     } else {
       const attributes = issueElement.attributes
@@ -56,8 +57,8 @@ function parseAndroidLint(report: any, root: string): Violation[] {
       const errorLine2 = attributes.errorLine2
 
       issueElement.elements.forEach(fileElement => {
-        if (fileElement.name != "location") {
-            console.log(`Illegal element ${fileElement.name}, expected location. Ignoring.`)
+        if (fileElement.name !== "location") {
+          console.warn(`Illegal element ${fileElement.name}, expected location. Ignoring.`)
         } else {
           const locationAttributes = fileElement.attributes
           const fileName = locationAttributes.file.replace(root, "").replace(/^\/+/, "")
