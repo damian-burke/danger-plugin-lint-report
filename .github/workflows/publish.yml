@@ -47,8 +47,8 @@ jobs:
         run: |
           npm i --package-lock-only
           git add .
-          git commit --amend -m "ci(release): ${{ steps.changelog.outputs.tag }}"
-          git push -f
+          git commit -m "chore(package): ${{ steps.changelog.outputs.tag }}"
+          git push
         env:
           GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
