@@ -65,7 +65,16 @@ jest.mock("fs", () => ({
 </issues>`,
 }))
 
-describe.only("scan()", () => {
+declare global {
+  namespace NodeJS {
+    interface Global {
+      danger: any
+      warn: any
+    }
+  }
+}
+
+describe("scan()", () => {
   it("scans multiple files and exits after all are finished", async () => {
     const git = {
       modified_files: ["feature/src/main/res/layout/fragment_password_reset.xml"],
@@ -73,8 +82,8 @@ describe.only("scan()", () => {
       structuredDiffForFile: async () =>
         new Promise(res => setTimeout(() => res({ chunks: [{ changes: [{ type: "add", ln: 13 }] }] }), 100)),
     }
-    ;(global as any).danger = { git }
-    ;(global as any).warn = jest.fn()
+    global.danger = { git }
+    global.warn = jest.fn()
 
     mockGlob.mockImplementation(() => ["feature/src/main/res/layout/fragment_password_reset.xml"])
 
@@ -84,7 +93,7 @@ describe.only("scan()", () => {
       requireLineModification: true,
     })
 
-    expect((global as any).warn).toHaveBeenCalled()
+    expect(global.warn).toHaveBeenCalled()
   })
 })
 
