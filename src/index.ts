@@ -20,7 +20,7 @@ export async function scan(config: CheckstyleConfig) {
   const git = danger.git
 
   const files: string[] = await new Promise((resolve, reject) =>
-    glob(config.fileMask, (err, result) => (err ? reject(err) : resolve(result)))
+    glob(config.fileMask, (err, result) => (err ? reject(err) : resolve(result))),
   )
 
   return Promise.all(
@@ -38,7 +38,7 @@ export async function scan(config: CheckstyleConfig) {
 
         sendViolationBySeverity(msg, file, line, severity)
       })
-    })
+    }),
   )
 }
 
@@ -47,7 +47,7 @@ export async function scanXmlReport(
   xmlReport,
   root,
   requireLineModification,
-  messageCallback: (msg, file, line, severity) => void
+  messageCallback: (msg, file, line, severity) => void,
 ) {
   const xmlConverter = require("xml-js")
   const report = xmlConverter.xml2js(xmlReport)

@@ -18,7 +18,7 @@ export async function scanReport(
   report: any,
   root: string,
   requireLineModification: boolean,
-  messageCallback: (msg: MarkdownString, fileName: string, line: number, severity: string) => void
+  messageCallback: (msg: MarkdownString, fileName: string, line: number, severity: string) => void,
 ) {
   const violations = parseCheckstyle(report, root)
   const files: string[] = []
