@@ -27,7 +27,7 @@ export async function scan(config: CheckstyleConfig) {
     files.map(async fileName => {
       const xmlReport = readFileSync(fileName)
 
-      scanXmlReport(git, xmlReport, root, config.requireLineModification, (msg, file, line, severity) => {
+      await scanXmlReport(git, xmlReport, root, config.requireLineModification, (msg, file, line, severity) => {
         if (!config.reportSeverity) {
           severity = "info"
         }
