@@ -71,3 +71,10 @@ dist/
 !.vscode/extensions.json
 
 # End of https://www.gitignore.io/api/node,visualstudiocode
+
+# Yarn
+.yarn/*
+!.yarn/cache
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks

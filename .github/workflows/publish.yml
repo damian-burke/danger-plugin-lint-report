@@ -3,7 +3,7 @@ name: Publish
 on: workflow_dispatch
 
 jobs:
-  publish-npm:
+  publish-package:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,8 +18,8 @@ jobs:
           git config user.name "github-actions";
           git config user.email "github-actions@github.com";
 
-      - name: npm install
-        run: npm install
+      - name: install
+        run: yarn install --immutable
 
       - name: Conventional Changelog Action
         id: changelog
@@ -45,7 +45,7 @@ jobs:
       - name: Update package
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
-          npm i --package-lock-only
+          yarn install --immutable
           git add .
           git commit -m "chore(package): ${{ steps.changelog.outputs.tag }}"
           git push
@@ -54,6 +54,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish
-        run: yarn publish --access public
+        run: yarn npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
