@@ -68,5 +68,4 @@ describe("reportViolationsForLines()", () => {
 
     expect(messageCallback).toHaveBeenCalledTimes(1)
   })
-
 })

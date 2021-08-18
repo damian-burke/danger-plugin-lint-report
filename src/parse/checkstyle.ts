@@ -18,7 +18,7 @@ export async function scanReport(
   report: any,
   root: string,
   requireLineModification: boolean,
-  messageCallback: (msg: MarkdownString, fileName: string, line: number, severity: string) => void,
+  messageCallback: (msg: MarkdownString, fileName: string, line: number, severity: string) => void
 ) {
   const violations = parseCheckstyle(report, root)
   const files: string[] = []
@@ -32,18 +32,18 @@ export async function scanReport(
     }
   })
 
-    // parse each file, wait for all to finish
+  // parse each file, wait for all to finish
   for (const file of files) {
-      let lineDiff: number[] = []
-      if (requireLineModification) {
-        lineDiff = await getChangedLinesByFile(git, file)
-      }
-
-      fileDiffs.push({
-        file,
-        added_lines: lineDiff,
-      })
+    let lineDiff: number[] = []
+    if (requireLineModification) {
+      lineDiff = await getChangedLinesByFile(git, file)
     }
+
+    fileDiffs.push({
+      file,
+      added_lines: lineDiff,
+    })
+  }
 
   reportViolationsForLines(violations, fileDiffs, requireLineModification, messageCallback)
 }
