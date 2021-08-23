@@ -79,8 +79,6 @@ interface CheckstyleConfig {
 
 See the GitHub [release history](https://github.com/damian-burke/danger-plugin-lint-report/releases).
 
-For the last couple of changelogs, see the [CHANGELOG.md](https://github.com/damian-burke/danger-plugin-lint-report/blob/main/CHANGELOG.md).
-
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
