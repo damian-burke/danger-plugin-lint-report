@@ -31,7 +31,7 @@
     "prepublish": "yarn build",
     "semantic-release": "semantic-release pre && yarn publish && semantic-release post",
     "prettier": "prettier",
-    "prettier-write": "yarn prettier -- --parser typescript --write",
+    "prettier-write": "yarn prettier --parser typescript --write",
     "prettier-project": "yarn prettier-write -- 'src/**/*.{ts,tsx}'",
     "lint": "tslint \"src/**/*.ts\""
   },
