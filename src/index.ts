@@ -3,6 +3,8 @@ import { DangerDSLType } from "danger"
 import { readFileSync } from "fs"
 import { scanReport } from "./parse/checkstyle"
 
+export const maxParallel = 10
+
 declare var danger: DangerDSLType
 type MarkdownString = string
 
@@ -23,23 +25,27 @@ export async function scan(config: CheckstyleConfig) {
     glob(config.fileMask, (err, result) => (err ? reject(err) : resolve(result))),
   )
 
-  return Promise.all(
-    files.map(async fileName => {
-      const xmlReport = readFileSync(fileName)
+  for (const batch of Array.from({ length: Math.ceil(files.length / maxParallel) }, (_, batchIdx) =>
+    files.slice(batchIdx * maxParallel, (batchIdx + 1) * maxParallel),
+  )) {
+    await Promise.all(
+      batch.map(async (fileName) => {
+        const xmlReport = readFileSync(fileName)
 
-      await scanXmlReport(git, xmlReport, root, config.requireLineModification, (msg, file, line, severity) => {
-        if (!config.reportSeverity) {
-          severity = "info"
-        }
+        await scanXmlReport(git, xmlReport, root, config.requireLineModification, (msg, file, line, severity) => {
+          if (!config.reportSeverity) {
+            severity = "info"
+          }
 
-        if (config.outputPrefix) {
-          msg = config.outputPrefix + msg
-        }
+          if (config.outputPrefix) {
+            msg = config.outputPrefix + msg
+          }
 
-        sendViolationBySeverity(msg, file, line, severity)
-      })
-    }),
-  )
+          sendViolationBySeverity(msg, file, line, severity)
+        })
+      }),
+    )
+  }
 }
 
 export async function scanXmlReport(
