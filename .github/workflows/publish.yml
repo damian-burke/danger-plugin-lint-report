@@ -57,5 +57,4 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: yarn npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          npmAuthToken: ${{ secrets.NPM_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
