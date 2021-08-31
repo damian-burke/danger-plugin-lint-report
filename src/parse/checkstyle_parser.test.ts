@@ -1,5 +1,11 @@
 import { parseCheckstyle } from "./checkstyle_parser"
 
+const mockFiles: string[] = []
+
+jest.mock("fs", () => ({
+  existsSync: (path) => mockFiles.includes(path),
+}))
+
 describe("parseCheckstyle()", () => {
   it("maps checkstyle 8.0 violations properly", () => {
     const root = "/root/"

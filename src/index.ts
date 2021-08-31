@@ -2,6 +2,9 @@
 import { DangerDSLType } from "danger"
 import { readFileSync } from "fs"
 import { scanReport } from "./parse/checkstyle"
+import { findFirstViolationFilename } from "./parse/checkstyle_parser"
+import path from "path"
+import fs from "fs"
 
 export const maxParallel = 10
 
@@ -57,7 +60,26 @@ export async function scanXmlReport(
 ) {
   const xmlConverter = require("xml-js")
   const report = xmlConverter.xml2js(xmlReport)
-  await scanReport(git, report, root, requireLineModification, messageCallback)
+  const improvedRoot = calculateRootFolder(report, root)
+  await scanReport(git, report, improvedRoot, requireLineModification, messageCallback)
+}
+
+function calculateRootFolder(report: any, root: string): string {
+  const file = findFirstViolationFilename(report)
+  if (!file) {
+    return root
+  }
+
+  const components = file.split(path.sep)
+  for (let i = 1; i < components.length; i++) {
+    const suffixComponents = components.slice(-i)
+    const candidateFile = path.resolve(root, ...suffixComponents)
+    if (fs.existsSync(candidateFile)) {
+      const relativePath = suffixComponents.join(path.sep)
+      return file.replace(relativePath, "")
+    }
+  }
+  return root
 }
 
 function sendViolationBySeverity(msg: MarkdownString, fileName: string, line: number, severity: string) {

@@ -41,7 +41,7 @@ function parseAndroidLint(report: any, root: string): Violation[] {
     return []
   }
 
-  report.elements[0].elements.forEach(issueElement => {
+  report.elements[0].elements.forEach((issueElement) => {
     if (issueElement.name !== "issue") {
       console.log(`Illegal element: ${issueElement.name}, expected issue. Ignoring.`)
     } else {
@@ -56,7 +56,7 @@ function parseAndroidLint(report: any, root: string): Violation[] {
       const errorLine1 = attributes.errorLine1
       const errorLine2 = attributes.errorLine2
 
-      issueElement.elements.forEach(fileElement => {
+      issueElement.elements.forEach((fileElement) => {
         if (fileElement.name !== "location") {
           console.warn(`Illegal element ${fileElement.name}, expected location. Ignoring.`)
         } else {
@@ -81,6 +81,20 @@ function parseAndroidLint(report: any, root: string): Violation[] {
 }
 
 /**
+ * Finds the filename of the first violation as specified in the report.
+ * @param report
+ * @returns filename as a `string` or `undefined` if it could not be found
+ */
+export function findFirstViolationFilename(report: any): string | undefined {
+  try {
+    const fileElement = report.elements[0].elements[0]
+    return fileElement.attributes.name ?? fileElement.elements[0].attributes.file
+  } catch (d) {
+    return undefined
+  }
+}
+
+/**
  *
  * @param report Checktyle report as JavaScript object
  * @param root Project root path
@@ -92,10 +106,10 @@ function parseCheckstyle8_0(report: any, root: string): Violation[] {
     return []
   }
 
-  report.elements[0].elements.forEach(fileElement => {
+  report.elements[0].elements.forEach((fileElement) => {
     const fileName = fileElement.attributes.name.replace(root, "").replace(/^\/+/, "")
 
-    fileElement.elements.forEach(errorElement => {
+    fileElement.elements.forEach((errorElement) => {
       const attributes = errorElement.attributes
       const line = +attributes.line
       const column = +attributes.column
