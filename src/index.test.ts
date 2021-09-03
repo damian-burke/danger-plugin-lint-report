@@ -63,9 +63,14 @@ const mockFileSync = jest.fn(
 
 </issues>`,
 )
+
+const mockFiles: string[] = []
+const mockFileExistsSync = (path: string) => mockFiles.includes(path)
+
 jest.mock("glob", () => (_, cb) => cb(null, mockGlob()))
 jest.mock("fs", () => ({
-  readFileSync: (path) => mockFileSync(path),
+  readFileSync: (path: string) => mockFileSync(path),
+  existsSync: (path: string) => mockFileExistsSync(path),
 }))
 
 declare global {
@@ -177,6 +182,25 @@ describe("scanXmlReport()", () => {
     const messageCallback = jest.fn()
 
     await scanXmlReport(git, xmlReport, root, false, messageCallback)
+
+    const msg = "Hardcoded text"
+    const file = "feature/src/main/res/layout/fragment_password_reset.xml"
+    const line = 13
+    const severity = "Warning"
+    expect(messageCallback).toBeCalledWith(msg, file, line, severity)
+  })
+
+  it("returns correct file location when root is different", async () => {
+    const git = {
+      modified_files: ["feature/src/main/res/layout/fragment_password_reset.xml"],
+      created_files: [],
+    }
+
+    mockFiles.push("/otherRoot/feature/src/main/res/layout/fragment_password_reset.xml")
+
+    const messageCallback = jest.fn()
+
+    await scanXmlReport(git, xmlReport, "/otherRoot/", false, messageCallback)
 
     const msg = "Hardcoded text"
     const file = "feature/src/main/res/layout/fragment_password_reset.xml"

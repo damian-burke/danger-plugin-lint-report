@@ -1,4 +1,6 @@
 import { exception } from "console"
+import path from "path"
+import fs from "fs"
 
 export function parseCheckstyle(report: any, root: string): Violation[] {
   if (!report.elements || !report.elements[0]) {
@@ -41,7 +43,7 @@ function parseAndroidLint(report: any, root: string): Violation[] {
     return []
   }
 
-  report.elements[0].elements.forEach(issueElement => {
+  report.elements[0].elements.forEach((issueElement) => {
     if (issueElement.name !== "issue") {
       console.log(`Illegal element: ${issueElement.name}, expected issue. Ignoring.`)
     } else {
@@ -56,12 +58,12 @@ function parseAndroidLint(report: any, root: string): Violation[] {
       const errorLine1 = attributes.errorLine1
       const errorLine2 = attributes.errorLine2
 
-      issueElement.elements.forEach(fileElement => {
+      issueElement.elements.forEach((fileElement) => {
         if (fileElement.name !== "location") {
           console.warn(`Illegal element ${fileElement.name}, expected location. Ignoring.`)
         } else {
           const locationAttributes = fileElement.attributes
-          const fileName = locationAttributes.file.replace(root, "").replace(/^\/+/, "")
+          const fileName = calculateRelativeFileName(locationAttributes.file, root)
           const line = +locationAttributes.line
           const column = +locationAttributes.column
 
@@ -81,6 +83,24 @@ function parseAndroidLint(report: any, root: string): Violation[] {
 }
 
 /**
+ * Calculates the relative filename by checking the existance of `file` in `root`
+ * @param file the absolute file present in the lint report
+ * @param root current folder
+ * @returns relative filename in `root` or filename with `root` removed if the file was not found
+ */
+function calculateRelativeFileName(file: string, root: string) {
+  const components = file.split(path.sep)
+  for (let i = 1; i < components.length; i++) {
+    const suffixComponents = components.slice(-i)
+    const candidateFile = path.resolve(root, ...suffixComponents)
+    if (fs.existsSync(candidateFile)) {
+      return path.relative(root, candidateFile)
+    }
+  }
+  return file.replace(root, "").replace(/^\/+/, "")
+}
+
+/**
  *
  * @param report Checktyle report as JavaScript object
  * @param root Project root path
@@ -92,10 +112,10 @@ function parseCheckstyle8_0(report: any, root: string): Violation[] {
     return []
   }
 
-  report.elements[0].elements.forEach(fileElement => {
-    const fileName = fileElement.attributes.name.replace(root, "").replace(/^\/+/, "")
+  report.elements[0].elements.forEach((fileElement) => {
+    const fileName = calculateRelativeFileName(fileElement.attributes.name, root)
 
-    fileElement.elements.forEach(errorElement => {
+    fileElement.elements.forEach((errorElement) => {
       const attributes = errorElement.attributes
       const line = +attributes.line
       const column = +attributes.column
