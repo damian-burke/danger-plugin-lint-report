@@ -64,7 +64,6 @@ const mockFileSync = jest.fn(
 </issues>`,
 )
 
-const mockFiles: string[] = []
 const mockFileExistsSync = jest.fn()
 
 jest.mock("glob", () => (_, cb) => cb(null, mockGlob()))
