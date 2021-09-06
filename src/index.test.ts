@@ -65,7 +65,7 @@ const mockFileSync = jest.fn(
 )
 
 const mockFiles: string[] = []
-const mockFileExistsSync = (path: string) => mockFiles.includes(path)
+const mockFileExistsSync = jest.fn()
 
 jest.mock("glob", () => (_, cb) => cb(null, mockGlob()))
 jest.mock("fs", () => ({
@@ -195,8 +195,9 @@ describe("scanXmlReport()", () => {
       modified_files: ["feature/src/main/res/layout/fragment_password_reset.xml"],
       created_files: [],
     }
-
-    mockFiles.push("/otherRoot/feature/src/main/res/layout/fragment_password_reset.xml")
+    mockFileExistsSync.mockImplementation((path) =>
+      ["/otherRoot/feature/src/main/res/layout/fragment_password_reset.xml"].includes(path),
+    )
 
     const messageCallback = jest.fn()
 
