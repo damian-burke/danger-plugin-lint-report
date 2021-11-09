@@ -1,6 +1,5 @@
-import { exception } from "console"
-import path from "path"
 import fs from "fs"
+import path from "path"
 
 export function parseCheckstyle(report: any, root: string): Violation[] {
   if (!report.elements || !report.elements[0]) {
@@ -112,10 +111,10 @@ function parseCheckstyle8_0(report: any, root: string): Violation[] {
     return []
   }
 
-  report.elements[0].elements.forEach((fileElement) => {
+  report.elements[0].elements?.forEach((fileElement) => {
     const fileName = calculateRelativeFileName(fileElement.attributes.name, root)
 
-    fileElement.elements.forEach((errorElement) => {
+    fileElement.elements?.forEach((errorElement) => {
       const attributes = errorElement.attributes
       const line = +attributes.line
       const column = +attributes.column
