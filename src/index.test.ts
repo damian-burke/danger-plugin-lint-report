@@ -39,6 +39,15 @@ const xmlReport = `
 
 </issues>
 `
+const eslintXmlReport = `
+<?xml version="1.0" encoding="utf-8"?>
+<checkstyle version="4.3">
+  <file name="/root/src/components/ComponentNoError.tsx"></file>
+  <file name="/root/src/components/ComponentWithError.tsx">
+    <error line="2" column="21" severity="warning" message="&apos;CircularProgress&apos; is defined but never used. (@typescript-eslint/no-unused-vars)" source="eslint.rules.@typescript-eslint/no-unused-vars" />
+  </file>
+</checkstyle>
+`
 
 const mockGlob = jest.fn(() => [] as string[])
 const mockFileSync = jest.fn(
@@ -206,6 +215,24 @@ describe("scanXmlReport()", () => {
     const file = "feature/src/main/res/layout/fragment_password_reset.xml"
     const line = 13
     const severity = "Warning"
+    expect(messageCallback).toBeCalledWith(msg, file, line, severity)
+  })
+
+  it("returns correct violation data for checkstyle report with files without messages", async () => {
+    const git = {
+      modified_files: ["src/components/ComponentNoError.tsx", "src/components/ComponentWithError.tsx"],
+      created_files: [],
+    }
+
+    const messageCallback = jest.fn()
+
+    await scanXmlReport(git, eslintXmlReport, root, false, messageCallback)
+
+    const msg = "'CircularProgress' is defined but never used. (@typescript-eslint/no-unused-vars)"
+    const file = "src/components/ComponentWithError.tsx"
+    const line = 2
+    const severity = "warning"
+    expect(messageCallback).toBeCalledTimes(1)
     expect(messageCallback).toBeCalledWith(msg, file, line, severity)
   })
 })
