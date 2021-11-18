@@ -204,7 +204,10 @@ describe("scanXmlReport()", () => {
       created_files: [],
     }
     mockFileExistsSync.mockImplementation((path) =>
-      ["/otherRoot/feature/src/main/res/layout/fragment_password_reset.xml"].includes(path),
+      [
+        "/otherRoot/feature/src/main/res/layout/fragment_password_reset.xml",
+        "/otherRoot/fragment_password_reset.xml",
+      ].includes(path),
     )
 
     const messageCallback = jest.fn()
