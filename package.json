@@ -19,7 +19,7 @@
   ],
   "version": "1.5.5",
   "main": "dist/index.js",
-  "types": "types/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "precommit": "lint-staged",
     "commit": "git-cz",
