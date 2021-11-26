@@ -90,7 +90,7 @@ function parseAndroidLint(report: any, root: string): Violation[] {
 function calculateRelativeFileName(file: string, root: string) {
   const components = file.split(path.sep)
   for (let i = 1; i < components.length; i++) {
-    const suffixComponents = components.slice(-i)
+    const suffixComponents = components.slice(i)
     const candidateFile = path.resolve(root, ...suffixComponents)
     if (fs.existsSync(candidateFile)) {
       return path.relative(root, candidateFile)
