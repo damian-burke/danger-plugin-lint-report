@@ -24,6 +24,7 @@ export async function scan(config: CheckstyleConfig) {
   const files: string[] = await new Promise((resolve, reject) =>
     glob(config.fileMask, (err, result) => (err ? reject(err) : resolve(result))),
   )
+  const violationFormatter: ViolationFormatter = config.violationFormatter || defaultViolationFormatter
 
   for (const batch of Array.from({ length: Math.ceil(files.length / maxParallel) }, (_, batchIdx) =>
     files.slice(batchIdx * maxParallel, (batchIdx + 1) * maxParallel),
@@ -32,16 +33,18 @@ export async function scan(config: CheckstyleConfig) {
       batch.map(async (fileName) => {
         const xmlReport = readFileSync(fileName)
 
-        await scanXmlReport(git, xmlReport, root, config.requireLineModification, (msg, file, line, severity) => {
+        await scanXmlReport(git, xmlReport, root, config.requireLineModification, (violation: Violation) => {
+          var severity = violation.severity
           if (!config.reportSeverity) {
             severity = "info"
           }
-
+          
+          var msg = violationFormatter.format(violation)
           if (config.outputPrefix) {
             msg = config.outputPrefix + msg
           }
-
-          sendViolationBySeverity(msg, file, line, severity)
+          
+          sendViolationBySeverity(msg, violation.file, violation.line, violation.severity)
         })
       }),
     )
@@ -53,11 +56,11 @@ export async function scanXmlReport(
   xmlReport,
   root,
   requireLineModification,
-  messageCallback: (msg, file, line, severity) => void,
+  violationCallback: (violation: Violation) => void,
 ) {
   const xmlConverter = require("xml-js")
   const report = xmlConverter.xml2js(xmlReport)
-  await scanReport(git, report, root, requireLineModification, messageCallback)
+  await scanReport(git, report, root, requireLineModification, violationCallback)
 }
 
 function sendViolationBySeverity(msg: MarkdownString, fileName: string, line: number, severity: string) {
@@ -76,5 +79,11 @@ function sendViolationBySeverity(msg: MarkdownString, fileName: string, line: nu
     case "fatal":
       fail(msg, fileName, line)
       break
+  }
+}
+
+let defaultViolationFormatter: ViolationFormatter = {
+  format: (violation: Violation): string => {
+    return violation.message
   }
 }

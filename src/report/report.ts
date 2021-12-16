@@ -4,7 +4,7 @@ export function reportViolationsForLines(
   violations: Violation[],
   fileDiffs: FileDiff[],
   requireLineModification: boolean,
-  messageCallback: (msg: MarkdownString, fileName: string, line: number, severity: string) => void,
+  violationCallback: (violation: Violation) => void,
 ) {
   // we got all changed lines in fileDiffs (file => list of line)
   violations.forEach(violation => {
@@ -15,7 +15,7 @@ export function reportViolationsForLines(
 
     if (diff) {
       if (!requireLineModification || diff.added_lines.includes(line)) {
-        messageCallback(violation.message, violation.file, violation.line, violation.severity)
+        violationCallback(violation)
       }
     }
   })

@@ -11,4 +11,10 @@ interface Violation {
    */
   severity: string
   message: string
+
+  // The following attributes are optional, i.e. they may not be present in all scans.
+  category?: string
+  summary?: string
+  explanation?: string
+  issueId?: string
 }

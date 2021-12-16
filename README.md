@@ -73,6 +73,11 @@ interface CheckstyleConfig {
    * This can be useful if there are multiple reports being parsed to make them distinguishable.
    */
   outputPrefix?: string
+  
+  /**
+   * Optional: Override the violation formatter to customize the output message.
+   */
+   violationFormatter?: ViolationFormatter
 }
 ```
 ## Changelog

@@ -68,10 +68,14 @@ function parseAndroidLint(report: any, root: string): Violation[] {
 
           violations.push({
             file: fileName,
-            line,
-            column,
-            severity,
-            message: summary,
+            line: line,
+            column: column,
+            severity: severity,
+            summary: summary,
+            category: category,
+            message: message,
+            explanation: explanation,
+            issueId: issueId,
           })
         }
       })
@@ -123,9 +127,9 @@ function parseCheckstyle8_0(report: any, root: string): Violation[] {
 
       violations.push({
         file: fileName,
-        line,
-        column,
-        severity,
+        line: line,
+        column: column,
+        severity: severity,
         message: msg,
       })
     })
