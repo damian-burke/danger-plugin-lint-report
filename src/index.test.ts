@@ -1,6 +1,6 @@
 import { maxParallel, scan, scanXmlReport } from "."
 
-const root = "/root/"
+const root = "/root"
 const expectedAndroidLintViolation1: Violation = {
   issueId: "HardcodedText",
   category: "Internationalization",
@@ -38,7 +38,7 @@ const xmlReport = `
         errorLine1="        android:hint=&quot;Password&quot;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="${expectedAndroidLintViolation1.file}"
+            file="/root/${expectedAndroidLintViolation1.file}"
             line="${expectedAndroidLintViolation1.line}"
             column="${expectedAndroidLintViolation1.column}"/>
     </issue>
@@ -54,7 +54,7 @@ const xmlReport = `
         errorLine1="        android:hint=&quot;Email Address&quot;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="${expectedAndroidLintViolation2.file}"
+            file="/root/${expectedAndroidLintViolation2.file}"
             line="${expectedAndroidLintViolation2.line}"
             column="${expectedAndroidLintViolation2.column}"/>
     </issue>
@@ -87,7 +87,7 @@ const mockFileSync = jest.fn(
         errorLine1="        android:hint=&quot;Email Address&quot;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="${expectedAndroidLintViolation1.file}"
+            file="/root/${expectedAndroidLintViolation1.file}"
             line="${expectedAndroidLintViolation1.line}"
             column="${expectedAndroidLintViolation1.column}"/>
     </issue>
@@ -139,10 +139,10 @@ describe("scan()", () => {
       return violation.message;
     })
     let violationFormatter: ViolationFormatter = {
-      format: formatFn, 
+      format: formatFn,
     }
 
-    
+
     const git = {
       modified_files: [expectedAndroidLintViolation1.file],
       created_files: [],
@@ -160,7 +160,7 @@ describe("scan()", () => {
       requireLineModification: true,
       violationFormatter: violationFormatter,
     })
-    
+
     expect(formatFn).toBeCalledWith(expectedAndroidLintViolation1)
     expect(global.warn).toBeCalledWith(formatFn(expectedAndroidLintViolation1), expectedAndroidLintViolation1.file, expectedAndroidLintViolation1.line)
   })
@@ -256,14 +256,14 @@ describe("scanXmlReport()", () => {
     }
     mockFileExistsSync.mockImplementation((path) =>
       [
-        "/otherRoot/" + expectedAndroidLintViolation1,
+        "/otherRoot/" + expectedAndroidLintViolation1.file,
         expectedAndroidLintViolation1.file.substring(expectedAndroidLintViolation1.file.indexOf("/", 1)),
       ].includes(path),
     )
 
     const violationCallback = jest.fn()
 
-    await scanXmlReport(git, xmlReport, "/otherRoot/", false, violationCallback)
+    await scanXmlReport(git, xmlReport, "/otherRoot", false, violationCallback)
 
     expect(violationCallback).toBeCalledWith(expectedAndroidLintViolation1)
   })
