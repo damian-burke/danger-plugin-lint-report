@@ -129,6 +129,7 @@ describe("scan()", () => {
       fileMask: "",
       reportSeverity: true,
       requireLineModification: true,
+      projectRoot: root,
     })
 
     expect(global.warn).toHaveBeenCalled()
@@ -158,6 +159,7 @@ describe("scan()", () => {
       fileMask: "",
       reportSeverity: true,
       requireLineModification: true,
+      projectRoot: root,
       violationFormatter: violationFormatter,
     })
 
@@ -199,7 +201,7 @@ describe("scan()", () => {
             errorLine1="        android:hint=&quot;Email Address&quot;"
             errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
             <location
-                file="feature/src/main/res/layout/fragment_password_reset.xml"
+                file="/root/feature/src/main/res/layout/fragment_password_reset.xml"
                 line="13"
                 column="9"/>
         </issue>
@@ -211,6 +213,7 @@ describe("scan()", () => {
       fileMask: "",
       reportSeverity: true,
       requireLineModification: true,
+      projectRoot: root,
     })
 
     expect(mockFileSync).toHaveBeenCalledTimes(123)

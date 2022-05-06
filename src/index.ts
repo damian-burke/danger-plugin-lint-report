@@ -18,7 +18,7 @@ export declare function markdown(message: string, file?: string, line?: number):
  */
 export async function scan(config: CheckstyleConfig) {
   const glob = require("glob")
-  const root = process.cwd()
+  const root = config.projectRoot ?? process.cwd()
   const git = danger.git
 
   const files: string[] = await new Promise((resolve, reject) =>
@@ -38,12 +38,12 @@ export async function scan(config: CheckstyleConfig) {
           if (!config.reportSeverity) {
             severity = "info"
           }
-          
+
           var msg = violationFormatter.format(violation)
           if (config.outputPrefix) {
             msg = config.outputPrefix + msg
           }
-          
+
           sendViolationBySeverity(msg, violation.file, violation.line, violation.severity)
         })
       }),

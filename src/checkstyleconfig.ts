@@ -24,5 +24,10 @@ interface CheckstyleConfig {
   /**
    * Optional: Override the violation formatter to customize the output message.
    */
-   violationFormatter?: ViolationFormatter
+  violationFormatter?: ViolationFormatter
+
+  /**
+   * Optional: Sets the root directory of the project. Defaults to the current working directory.
+   */
+  projectRoot?: string
 }
