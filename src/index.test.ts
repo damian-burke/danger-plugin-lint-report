@@ -38,7 +38,7 @@ const xmlReport = `
         errorLine1="        android:hint=&quot;Password&quot;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="/root/${expectedAndroidLintViolation1.file}"
+            file="${root}/${expectedAndroidLintViolation1.file}"
             line="${expectedAndroidLintViolation1.line}"
             column="${expectedAndroidLintViolation1.column}"/>
     </issue>
@@ -54,7 +54,7 @@ const xmlReport = `
         errorLine1="        android:hint=&quot;Email Address&quot;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="/root/${expectedAndroidLintViolation2.file}"
+            file="${root}/${expectedAndroidLintViolation2.file}"
             line="${expectedAndroidLintViolation2.line}"
             column="${expectedAndroidLintViolation2.column}"/>
     </issue>
@@ -64,8 +64,8 @@ const xmlReport = `
 const eslintXmlReport = `
 <?xml version="1.0" encoding="utf-8"?>
 <checkstyle version="4.3">
-  <file name="/root/src/components/ComponentNoError.tsx"></file>
-  <file name="/root/src/components/ComponentWithError.tsx">
+  <file name="${root}/src/components/ComponentNoError.tsx"></file>
+  <file name="${root}/src/components/ComponentWithError.tsx">
     <error line="2" column="21" severity="warning" message="&apos;CircularProgress&apos; is defined but never used. (@typescript-eslint/no-unused-vars)" source="eslint.rules.@typescript-eslint/no-unused-vars" />
   </file>
 </checkstyle>
@@ -87,7 +87,7 @@ const mockFileSync = jest.fn(
         errorLine1="        android:hint=&quot;Email Address&quot;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="/root/${expectedAndroidLintViolation1.file}"
+            file="${root}/${expectedAndroidLintViolation1.file}"
             line="${expectedAndroidLintViolation1.line}"
             column="${expectedAndroidLintViolation1.column}"/>
     </issue>
@@ -201,7 +201,7 @@ describe("scan()", () => {
             errorLine1="        android:hint=&quot;Email Address&quot;"
             errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
             <location
-                file="/root/feature/src/main/res/layout/fragment_password_reset.xml"
+                file="${root}/feature/src/main/res/layout/fragment_password_reset.xml"
                 line="13"
                 column="9"/>
         </issue>
