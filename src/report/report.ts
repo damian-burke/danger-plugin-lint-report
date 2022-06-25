@@ -13,7 +13,7 @@ export function reportViolationsForLines(
 
     const diff = fileDiffs.find(element => element.file === file)
 
-    if(diff) {
+    if (diff) {
       if (!requireLineModification || diff.added_lines.includes(line)) {
         messageCallback(violation.message, violation.file, violation.line, violation.severity)
       }
