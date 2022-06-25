@@ -1,0 +1,22 @@
+name: DangerJS
+
+on: [pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Install Danger
+        run: yarn add danger danger-plugin-lint-report
+      - name: Run Lint
+        run: yarn lint
+        continue-on-error: true
+      - name: Run Danger
+        run: yarn danger ci --failOnErrors --dangerfile .danger/dangerfile-lint.ts --id "Danger (Lint)"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
