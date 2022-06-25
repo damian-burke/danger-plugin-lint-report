@@ -14,7 +14,7 @@ jobs:
       - name: Install Danger
         run: yarn add danger danger-plugin-lint-report
       - name: Run Lint
-        run: npm run lint
+        run: yarn lint
         continue-on-error: true
       - name: Run Danger
         run: yarn danger ci --failOnErrors --dangerfile .danger/dangerfile-lint.ts --id "Danger (Lint)"

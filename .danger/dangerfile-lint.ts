@@ -1,6 +1,6 @@
 import {danger, fail, message, warn} from 'danger'
 
-const reporter = require("danger-plugin-lint-report")
+const reporter = require("../src")
 
 // Scan ktlint reports
 schedule(reporter.scan({
