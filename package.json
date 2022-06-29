@@ -33,7 +33,7 @@
     "prettier": "prettier",
     "prettier-write": "yarn prettier --parser typescript --write",
     "prettier-project": "yarn prettier-write -- 'src/**/*.{ts,tsx}'",
-    "lint": "tslint \"src/**/*.ts\" --out \"tslint-report.xml\" --format \"checkstyle\""
+    "lint": "tslint \"src/**/*.ts\""
   },
   "license": "MIT",
   "engines": {
