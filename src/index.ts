@@ -21,6 +21,8 @@ export async function scan(config: CheckstyleConfig) {
   const root = config.projectRoot ?? process.cwd()
   const git = danger.git
 
+  let accumulated: { [id: string] : Violation; } = {}
+
   const files: string[] = await new Promise((resolve, reject) =>
     glob(config.fileMask, (err, result) => (err ? reject(err) : resolve(result))),
   )
@@ -36,19 +38,32 @@ export async function scan(config: CheckstyleConfig) {
         await scanXmlReport(git, xmlReport, root, config.requireLineModification, (violation: Violation) => {
           var severity = violation.severity
           if (!config.reportSeverity) {
-            severity = "info"
+            violation.severity = "info"
           }
 
-          var msg = violationFormatter.format(violation)
-          if (config.outputPrefix) {
-            msg = config.outputPrefix + msg
+          if (config.removeDuplicates) {
+            let id = `${ violation.issueId }_${ violation.file }:${ violation.line }.${ violation.column }`
+            accumulated[id] = violation
+          } else {
+            generateMessageAndReport(violation, violationFormatter, config.outputPrefix)
           }
-
-          sendViolationBySeverity(msg, violation.file, violation.line, violation.severity)
         })
       }),
     )
   }
+
+  for (let id in accumulated) {
+    let violation = accumulated[id]
+    generateMessageAndReport(violation, violationFormatter, config.outputPrefix)
+  }
+}
+
+function generateMessageAndReport(violation: Violation, violationFormatter: ViolationFormatter, outputPrefix?: string) {
+  var msg = violationFormatter.format(violation)
+  if (outputPrefix) {
+    msg = outputPrefix + msg
+  }
+  sendViolationBySeverity(msg, violation.file, violation.line, violation.severity)
 }
 
 export async function scanXmlReport(

@@ -78,6 +78,11 @@ interface CheckstyleConfig {
    * Optional: Override the violation formatter to customize the output message.
    */
    violationFormatter?: ViolationFormatter
+
+  /**
+   * Optional: If set to true, it will remove duplicate violations.
+   */
+  removeDuplicates?: boolean
 }
 ```
 ## Changelog
