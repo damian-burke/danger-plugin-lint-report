@@ -30,4 +30,9 @@ interface CheckstyleConfig {
    * Optional: Sets the root directory of the project. Defaults to the current working directory.
    */
   projectRoot?: string
+
+  /**
+   * Optional: If set to true, it will remove duplicate violations.
+   */
+  removeDuplicates?: boolean
 }

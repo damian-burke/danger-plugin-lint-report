@@ -168,6 +168,54 @@ describe("scan()", () => {
   })
 
 
+  it(`removes duplicate violations if option is enabled`, async () => {
+    const git = {
+      modified_files: ["feature/src/main/res/layout/fragment_password_reset.xml"],
+      created_files: [],
+      structuredDiffForFile: async () => ({ chunks: [{ changes: [{ type: "add", ln: 13 }] }] }),
+    }
+    let counter = 0
+    let highMark = 0
+    global.danger = { git }
+    global.warn = jest.fn(() => ++counter)
+
+    mockGlob.mockImplementation(() =>
+      Array.from({ length: 123 }, () => "feature/src/main/res/layout/fragment_password_reset.xml"),
+    )
+    mockFileSync.mockReset().mockImplementation((path: string) => {
+      return `<?xml version="1.0" encoding="UTF-8"?>
+    <issues format="5" by="lint 4.2.0-alpha01">
+
+        <issue
+            id="HardcodedText"
+            severity="Warning"
+            message="Hardcoded string &quot;Email Address&quot;, should use \`@string\` resource"
+            category="Internationalization"
+            priority="5"
+            summary="Hardcoded text"
+            explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+            errorLine1="        android:hint=&quot;Email Address&quot;"
+            errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+            <location
+                file="${root}/feature/src/main/res/layout/fragment_password_reset.xml"
+                line="13"
+                column="9"/>
+        </issue>
+
+    </issues>`
+    })
+
+    await scan({
+      fileMask: "",
+      reportSeverity: true,
+      requireLineModification: true,
+      projectRoot: root,
+      removeDuplicates: true,
+    })
+
+    expect(counter).toEqual(1)
+  })
+
   it(`scans maximum ${maxParallel} files in parallel to prevent OoM exceptions`, async () => {
     const git = {
       modified_files: ["feature/src/main/res/layout/fragment_password_reset.xml"],
