@@ -36,7 +36,6 @@ export async function scan(config: CheckstyleConfig) {
         const xmlReport = readFileSync(fileName)
 
         await scanXmlReport(git, xmlReport, root, config.requireLineModification, (violation: Violation) => {
-          var severity = violation.severity
           if (!config.reportSeverity) {
             violation.severity = "info"
           }
@@ -59,7 +58,7 @@ export async function scan(config: CheckstyleConfig) {
 }
 
 function generateMessageAndReport(violation: Violation, violationFormatter: ViolationFormatter, outputPrefix?: string) {
-  var msg = violationFormatter.format(violation)
+  let msg = violationFormatter.format(violation)
   if (outputPrefix) {
     msg = outputPrefix + msg
   }
