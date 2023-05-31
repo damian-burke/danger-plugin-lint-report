@@ -49,10 +49,11 @@ jobs:
 
       - name: Update package
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        
         run: |
           yarn install --immutable
           git add .
-          git commit -m "chore(package): ${{ steps.changelog.outputs.tag }}"
+          git commit -m "chore(package): ${{ steps.changelog.outputs.tag }}" --allow-empty
           git push
         env:
           GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
